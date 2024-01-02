@@ -1,4 +1,4 @@
-// models/store.js
+// Stores.js Schema
 const mongoose = require('mongoose');
 
 const storeSchema = new mongoose.Schema({
@@ -8,8 +8,8 @@ const storeSchema = new mongoose.Schema({
     required: true,
     minLength: 1,
   },
-  managerId: String, // Use String instead of mongoose.Schema.Types.ObjectId
-  // Add more fields as needed
+  // Use String instead of mongoose.Schema.Types.ObjectId Since I want to Retrieve ManagerID which is not an ObjectID
+  managerId: String, 
 });
 
 const Store = mongoose.model('Store', storeSchema);

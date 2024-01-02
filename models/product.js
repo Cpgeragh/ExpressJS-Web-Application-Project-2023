@@ -1,4 +1,4 @@
-// models/product.js
+// Products.js Schema
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   price: Number,
-  // Add more fields as needed
+
 });
 
 const Product = mongoose.model('Product', productSchema);

@@ -4,21 +4,21 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Set EJS as the view engine
+// Set EJS as View Engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// parse application/x-www-form-urlencoded
+// Middleware to Parse Request Body
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// parse application/json
+// Middleware to JSON Request Body
 app.use(bodyParser.json());
 
-// MongoDB DAO initialization
+// MongoDB DAO Initialization
 const mongoDAO = require('./dao');
 const dao = mongoDAO.init();
 
-// Middleware to add the MongoDB DAO to each request
+// Middleware to Add MongoDB DAO to Each Request
 app.use((req, res, next) => {
   req.dao = dao;
   next();
@@ -36,20 +36,6 @@ app.use('/managers', managersRouter);
 // Home Page
 app.get('/', (req, res) => {
   res.render('index', { title: 'Home Page' });
-});
-
-// Example route to find all documents
-app.get('/find', (req, res) => {
-  req.dao.findAll()
-    .then((documents) => {
-      // Process documents
-      res.send(`Found ${documents.length} documents: ${JSON.stringify(documents)}`);
-    })
-    .catch((error) => {
-      // Handle error
-      console.error('Error retrieving documents:', error);
-      res.status(500).send('Internal Server Error');
-    });
 });
 
 app.listen(port, () => {

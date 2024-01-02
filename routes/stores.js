@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const dao = require('../dao').init(); // Import the dao
+const dao = require('../dao').init();
 
-// Stores Page (GET /stores)
+// Fetches List of Stores and Sends to View Template
 router.get('/', async (req, res) => {
   const query = 'SELECT * FROM store';
-  
+
+  // Accesses Mysql Database
   const connection = await dao.getConnection();
   connection.query(query, (err, result) => {
-    connection.release(); // Release the connection when you're done
+    connection.release();
     if (err) {
       console.error('Error executing MySQL query: ', err);
       res.status(500).send('Internal Server Error');
@@ -18,11 +19,11 @@ router.get('/', async (req, res) => {
   });
 });
 
-// Edit Store Page (GET /stores/edit/:sid)
+// Edit Store Page
 router.get('/edit/:sid', async (req, res) => {
   const sid = req.params.sid;
   const query = 'SELECT * FROM store WHERE sid = ?';
-  
+
   const connection = await dao.getConnection();
   connection.query(query, [sid], (err, result) => {
     connection.release();
@@ -54,7 +55,7 @@ router.get('/edit/:sid', async (req, res) => {
 });
 
 router.get('/add', (req, res) => {
-  // Render the 'add store' form
+  // Render 'Add Store' Form
   res.send(`
     <h1>Add Store</h1>
     <form action="/stores/add" method="post">
@@ -74,19 +75,19 @@ router.get('/add', (req, res) => {
 router.post('/add', async (req, res) => {
   const { sid, location, mgrid } = req.body;
 
-  // Validate SID
-if (!/^.{5}$/.test(sid)) {
-  return res.send('SID must be exactly 5 characters. <a href="/stores/add">Try again</a>');
-}
+  // Validate SID Parameters
+  if (!/^.{5}$/.test(sid)) {
+    return res.send('SID must be exactly 5 characters. <a href="/stores/add">Try again</a>');
+  }
 
-  // Validate location
+  // Validate Location Parameters
   if (location.length < 1) {
     return res.send('Location must have more than one character. <a href="/stores/add">Try again</a>');
   }
 
   const connection = await dao.getConnection();
 
-  // Check if SID already exists in MySQL
+  // Check if SID Already Exists in MySQL
   const sidQuery = 'SELECT * FROM store WHERE sid = ?';
   connection.query(sidQuery, [sid], async (err, result) => {
     if (err) {
@@ -97,7 +98,7 @@ if (!/^.{5}$/.test(sid)) {
         return res.send('SID ' + sid + ' already exists. <a href="/stores/add">Try again</a>');
       }
 
-      // Check if manager ID exists in MongoDB and is not managing another store
+      // Check if Manager ID Exists in MongoDB and Not Managing Other Store
       const manager = await dao.getManagerById(mgrid);
       if (!manager) {
         return res.send('Manager ' + mgrid + ' doesn\'t exist in MongoDB. <a href="/stores/add">Try again</a>');
@@ -113,7 +114,7 @@ if (!/^.{5}$/.test(sid)) {
             return res.send('Manager ' + mgrid + ' already managing another store. <a href="/stores/add">Try again</a>');
           }
 
-          // Insert new store into MySQL
+          // Insert New store into MySQL
           const insertQuery = 'INSERT INTO store (sid, location, mgrid) VALUES (?, ?, ?)';
           connection.query(insertQuery, [sid, location, mgrid], (err, result) => {
             connection.release();
@@ -130,17 +131,17 @@ if (!/^.{5}$/.test(sid)) {
   });
 });
 
-// Handle Edit Store (POST /stores/edit/:sid)
+// Handle Edit Store Form Submission
 router.post('/edit/:sid', async (req, res) => {
   const sid = req.params.sid;
   const { location, mgrid } = req.body;
 
-  // Validate location
+  // Validate Location
   if (location.length < 1) {
     return res.send('Location must have more than one character. <a href="/stores/edit/' + sid + '">Try again</a>');
   }
 
-  // Validate manager ID
+  // Validate Manager ID
   if (mgrid.length !== 4) {
     return res.send('Manager ID must only have 4 characters. <a href="/stores/edit/' + sid + '">Try again</a>');
   }
@@ -148,34 +149,34 @@ router.post('/edit/:sid', async (req, res) => {
   const connection = await dao.getConnection();
 
   const checkQuery = 'SELECT * FROM store WHERE mgrid = ? AND sid != ?';
-connection.query(checkQuery, [mgrid, sid], async (err, result) => {
-  if (err) {
-    console.error('Error executing MySQL query: ', err);
-    res.status(500).send('Internal Server Error');
-  } else {
-    if (result.length > 0) {
-      return res.send('Manager ' + mgrid + ' already managing another store. <a href="/stores/edit/' + sid + '">Try again</a>');
-    }
-
-    // Check if manager ID exists in MongoDB
-    const manager = await dao.getManagerById(mgrid);
-    if (!manager) {
-      return res.send('Manager ' + mgrid + ' doesn\'t exist in MongoDB. <a href="/stores/edit/' + sid + '">Try again</a>');
-    }
-
-    // Update store in MySQL
-    const updateQuery = 'UPDATE store SET location = ?, mgrid = ? WHERE sid = ?';
-    connection.query(updateQuery, [location, mgrid, sid], (err, result) => {
-      connection.release();
-      if (err) {
-        console.error('Error updating store in MySQL: ', err);
-        res.status(500).send('Internal Server Error');
-      } else {
-        res.redirect('/stores');
+  connection.query(checkQuery, [mgrid, sid], async (err, result) => {
+    if (err) {
+      console.error('Error executing MySQL query: ', err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      if (result.length > 0) {
+        return res.send('Manager ' + mgrid + ' already managing another store. <a href="/stores/edit/' + sid + '">Try again</a>');
       }
-    }); // Closing parenthesis for connection.query()
-  } // Closing bracket for the callback function passed to connection.query()
-}); // Closing parenthesis for connection.query()
+
+      // Check if Manager ID Exists in MongoDB
+      const manager = await dao.getManagerById(mgrid);
+      if (!manager) {
+        return res.send('Manager ' + mgrid + ' doesn\'t exist in MongoDB. <a href="/stores/edit/' + sid + '">Try again</a>');
+      }
+
+      // Update Store in MySQL
+      const updateQuery = 'UPDATE store SET location = ?, mgrid = ? WHERE sid = ?';
+      connection.query(updateQuery, [location, mgrid, sid], (err, result) => {
+        connection.release();
+        if (err) {
+          console.error('Error updating store in MySQL: ', err);
+          res.status(500).send('Internal Server Error');
+        } else {
+          res.redirect('/stores');
+        }
+      });
+    }
+  });
 });
 
 module.exports = router;
