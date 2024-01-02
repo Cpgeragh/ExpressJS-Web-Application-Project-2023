@@ -1,0 +1,30 @@
+<!-- views/stores.ejs -->
+<head>
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<%- include('./tables.ejs') %>
+<h1>Stores Page</h1>
+<a class="btn btn-danger" href="/stores/add">Add Store</a>
+<table>
+  <thead>
+    <tr>
+      <th>SID</th>
+      <th>Location</th>
+      <th>Manager ID</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% stores.forEach((store) => { %>
+      <tr>
+        <td><%= store.sid %></td>
+        <td><%= store.location %></td>
+        <td><%= store.mgrid %></td>
+        <td><a class="btn btn-danger" href="/stores/edit/<%= store.sid %>">Update</a></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<br>
+<a class="btn btn-danger" href="/">Back to Home</a>

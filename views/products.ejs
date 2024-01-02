@@ -1,0 +1,27 @@
+<!-- views/products.ejs -->
+<!-- views/tables.ejs -->
+<head>
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<%- include('./tables.ejs') %>
+<h1>Products Page</h1>
+<table>
+  <!-- ... rest of your code ... -->
+  <tbody>
+    <% products.forEach((product) => { %>
+      <tr>
+        <td><%= product.pid !== null ? product.pid : '' %></td>
+        <td><%= product.productdesc !== null ? product.productdesc : '' %></td>
+        <td><%= product.supplier !== null ? product.supplier : '' %></td>
+        <td><%= product.sid !== null ? product.sid : '' %></td>
+        <td><%= product.location !== null ? product.location : '' %></td>
+        <td><%= product.price !== null ? product.price : '' %></td>
+        <td>
+          <a class="btn btn-danger" href="/products/delete/<%= product.pid %>">Delete</a>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<a class="btn btn-danger" href="/">Back to Home Page</a>

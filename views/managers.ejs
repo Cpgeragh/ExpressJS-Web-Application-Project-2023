@@ -1,0 +1,21 @@
+<!-- views/managers.ejs -->
+<!-- views/tables.ejs -->
+<head>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  </head>
+<%- include('./tables.ejs') %>
+<h1>Managers (MongoDB) Page</h1>
+<a class="btn btn-danger" href="/managers/add">Add Manager (MongoDB)</a>
+<table>
+  <tbody>
+    <% managers.forEach((manager) => { %>
+      <tr>
+        <td><%= manager._id %></td>
+        <td><%= manager.name %></td>
+        <td><%= manager.salary %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+<a class="btn btn-danger" href="/">Back to Main Page</a>

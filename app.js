@@ -1,7 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
 const port = 3000;
+
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -30,14 +35,7 @@ app.use('/managers', managersRouter);
 
 // Home Page
 app.get('/', (req, res) => {
-  res.send(`
-    <h1>Welcome to the Home Page</h1>
-    <ul>
-      <li><a href="/stores">Stores</a></li>
-      <li><a href="/products">Products</a></li>
-      <li><a href="/managers">Managers</a></li>
-    </ul>
-  `);
+  res.render('index', { title: 'Home Page' });
 });
 
 // Example route to find all documents

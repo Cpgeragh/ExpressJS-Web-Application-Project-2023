@@ -18,38 +18,7 @@ router.get('/', async (req, res) => {
       console.error('Error executing MySQL query: ', err);
       res.status(500).send('Internal Server Error');
     } else {
-      res.send(`
-        <h1>Products Page</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Product ID</th>
-              <th>Description</th>
-              <th>Supplier</th>
-              <th>Store ID</th>
-              <th>Location</th>
-              <th>Price</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${result.map((product) => `
-              <tr>
-              <td>${product.pid !== null ? product.pid : ''}</td>
-              <td>${product.productdesc !== null ? product.productdesc : ''}</td>
-              <td>${product.supplier !== null ? product.supplier : ''}</td>
-              <td>${product.sid !== null ? product.sid : ''}</td>
-              <td>${product.location !== null ? product.location : ''}</td>
-              <td>${product.price !== null ? product.price : ''}</td>
-                <td>
-                  <a href="/products/delete/${product.pid}">Delete</a>
-                </td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        <a href="/">Back to Home Page</a>
-      `);
+      res.render('products', { products: result }); // Render the products.ejs template with the query result
     }
   });
 });
@@ -89,7 +58,7 @@ router.get('/delete/:pid', async (req, res) => {
             res.status(500).send('Internal Server Error');
           } else {
             const productName = nameResult.length > 0 ? nameResult[0].productdesc : 'Unknown Product';
-            res.status(400).send(`Error: "${productName}" is currently in stores and cannot be deleted`);
+            res.status(400).send(`Error: "${productName}" is currently in stores and cannot be deleted. <a href="/products">Try Again</a>`);
           }
         });
       }

@@ -13,32 +13,7 @@ router.get('/', async (req, res) => {
       console.error('Error executing MySQL query: ', err);
       res.status(500).send('Internal Server Error');
     } else {
-      res.send(`
-        <h1>Stores Page</h1>
-        <a href="/stores/add">Add Store</a> <!-- Add this line -->
-        <table>
-          <thead>
-            <tr>
-              <th>SID</th>
-              <th>Location</th>
-              <th>Manager ID</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${result.map((store) => `
-              <tr>
-                <td>${store.sid}</td>
-                <td>${store.location}</td>
-                <td>${store.mgrid}</td>
-                <td><a href="/stores/edit/${store.sid}">Update</a></td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        <br>
-        <a href="/">Back to Home</a>
-      `);
+      res.render('stores', { stores: result });
     }
   });
 });

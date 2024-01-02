@@ -1,6 +1,27 @@
-<h1>Welcome to the Home Page</h1>
-<ul>
-  <li><a href="/stores">Stores</a></li>
-  <li><a href="/products">Products</a></li>
-  <li><a href="/managers">Managers (MongoDB)</a></li>
-</ul>
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <!-- Add custom CSS -->
+  <style>
+    .btn-group .btn {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mt-4 mb-4"><%= title %></h1>
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <a class="btn btn-danger" href="/stores">Stores</a>
+      <a class="btn btn-danger" href="/products">Products</a>
+      <a class="btn btn-danger" href="/managers">Managers</a>
+    </div>
+  </div>
+  <!-- Add Bootstrap JS and its dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
