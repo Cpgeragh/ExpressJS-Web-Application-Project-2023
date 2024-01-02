@@ -45,7 +45,7 @@ router.get('/add', (req, res) => {
       <input type="text" id="mid" name="mid" pattern="M[0-9]{3}" required><br>
       <label for="name">Name (at least five characters):</label>
       <input type="text" id="name" name="name" minlength="5" required><br>
-      label for="salary">Salary (between 30000 and 70000):</label>
+      <label for="salary">Salary (between 30000 and 70000):</label>
       <input type="number" id="salary" name="salary" min="30000" max="70000" step="0.01" required><br>
       <input type="submit" value="Add Manager">
     </form>
